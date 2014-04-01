@@ -97,6 +97,30 @@ delete {
   text-decoration: line-through;
 }
 
+.array-table {
+  border: 1px #ccc solid;
+  border-collapse: collapse;
+}
+
+.array-table th, .array-table td {
+  border: 1px #ccc solid;
+  width: auto;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.object-table {
+  border: 1px #ccc solid;
+  border-collapse: collapse;
+}
+
+.object-table th, .object-table td {
+  border: 1px #ccc solid;
+  width: auto;
+  white-space: nowrap;
+  text-align: center;
+}
+
 .component-devtools pre {
   padding: 0;
   font-size: inherit;

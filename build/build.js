@@ -35573,9 +35573,7 @@ function renderStack(stack) {
   return tStack.render({stack: stack.slice().reverse()});
 }
 
-
-//Helper Function to properly render values
-function renderThing(thing){
+function prettyPrintValues(thing){
   var value;
   var type = Object.prototype.toString.call(thing);
 
@@ -35590,17 +35588,30 @@ function renderThing(thing){
     value = 'function()';
     break;
   case '[object Array]':
-    value = '[ ';
+    /*value = '[ ';
     for(var i=0; i<thing.length; i++)
-      value += renderThing(thing[i]) + " ";
-    value += ']';
+      value += prettyPrintValues(thing[i]) + " ";
+    value += ']';*/
+
+    value = " <table-array><tr> ";
+    for(var i=0; i<thing.length; i++)
+      value += "<th> " + i + " </th> ";
+    value += "</tr><tr>";
+    for(var i=0; i<thing.length; i++)
+      value += "<td> " + prettyPrintValues(thing[i]) + " </td> ";
+    value += "</tr></table> "
+
     break;
-  //case '[object HTMLDivElement]':
   case '[object Object]':
-    value = '{ ';
+    /*value = '{ ';
     for(var propName in thing)
-      value += propName + ": " + renderThing(thing[propName]) + " ";
-    value += '}';
+      value += propName + ": " + prettyPrintValues(thing[propName]) + " ";
+    value += '}';*/
+
+    value = " <table-object> ";
+    for(var propName in thing)
+      value += "<tr><td> " + propName + " </td><td> " + prettyPrintValues(thing[propName]) + " </td></tr> ";
+    value += "</table> "
     break;
   case '[object String]':
     value = '"' + thing + '"';
@@ -35612,6 +35623,12 @@ function renderThing(thing){
   return value;
 }
 
+function renderValue(value){
+  var rendered = value.replace(/table-array/g, 'table class="array-table"').replace(/table-object/g, 'table class="object-table"');
+
+  return rendered;
+}
+
 function renderScope(frame, prevFrame) {
   console.log(frame);
   console.log(prevFrame);
@@ -35620,14 +35637,14 @@ function renderScope(frame, prevFrame) {
 
   if(isSameScope)
     for(var i=0; i<frame.scope.length; i++){
-      frame.scope[i].rawValue = renderThing(frame.evalInScope(frame.scope[i].name));
-      frame.scope[i].value = diffString(prevFrame.scope[i].rawValue, frame.scope[i].rawValue);
+      frame.scope[i].rawValue = prettyPrintValues(frame.evalInScope(frame.scope[i].name));
+      frame.scope[i].value = renderValue(diffString(prevFrame.scope[i].rawValue, frame.scope[i].rawValue));
     }
   else
     frame.scope.forEach(function (o) {
       var oldValue = "undefined";
-      o.rawValue = renderThing(frame.evalInScope(o.name));
-      o.value = diffString(oldValue, o.rawValue);
+      o.rawValue = prettyPrintValues(frame.evalInScope(o.name));
+      o.value = renderValue(diffString(oldValue, o.rawValue));
     });
 
   return tScope.render(frame);
@@ -38522,8 +38539,8 @@ UserSession.loadOrCreateSession = function (id, cb) {
          '',
          'function changeColor() {',
          '  var TheUltimate = function(a){this.yeah=1; return a+1;};',
-         '  var stuff = {parts:[1, 2, 3], thing:"What", oohy: function(){return 1;}};',
          '  var hmm = ["Hey!", "Ho!", {lets:"go!"}];',
+         '  var stuff = {parts:[1, 2, 3], thing:"What", oohy: function(){return 1;}};',
          '  var tuesday = new Date();',
          '  hmm[1] = "Oh!";',
          '  var color = randomColor();',
@@ -38533,7 +38550,7 @@ UserSession.loadOrCreateSession = function (id, cb) {
          '',
          'setInterval(changeColor, 250);'
          ].join('\n'),
-      breakpoints: {7: true }
+      breakpoints: {8: true }
     });
     var html = new File({
       filename: 'index.html',
