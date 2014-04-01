@@ -4,16 +4,22 @@ HTML = $(wildcard lib/*/*.html)
 COMPONENTJSON = $(wildcard lib/*/component.json)
 TEMPLATES = $(HTML:.html=.js)
 
+deploy: build
+	@echo Deploying
+	rm -fdr ../portfolio/source/StateMonitor
+	cp -R . ../portfolio/source/StateMonitor
+
 build: components $(SRC) $(CSS) $(TEMPLATES)
-	@echo building
 	@component build
 
 components: component.json $(COMPONENTJSON)
-	@echo installing
+	@echo These two wont behave, and needed to be installed manually...
+	@component install component/to-function component/event
+	@echo installing everything else...
 	@component install
 
 %.js: %.html
-	@echo converting
+	@echo converting $<
 	@component convert $<
 
 minify:

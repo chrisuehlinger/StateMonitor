@@ -1,7 +1,7 @@
 {
-  "name": "debugjs.com",
-  "repo": "amasad/debugjs.com",
-  "description": "debugjs app",
+  "name": "StateMonitor",
+  "repo": "chrisuehlinger/StateMonitor",
+  "description": "debugjs StateMonitor",
   "version": "0.0.1",
   "local": [
     "boot"
@@ -12,7 +12,9 @@
   "keywords": [],
   "dependencies": {
     "amasad/bootstrap-css": "*",
-    "FortAwesome/Font-Awesome": "*"
+    "FortAwesome/Font-Awesome": "*",
+    "component/to-function": "*",
+    "component/event": "*"
   },
   "development": {},
   "license": "AAL",
